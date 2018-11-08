@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AppVendedor.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:AppVendedor">
+
+    <StackLayout Margin="10">
+        <Label
+            FontAttributes="Bold"
+            FontSize="25"
+            HorizontalOptions="CenterAndExpand"
+            Text="Novos Pedidos"
+            VerticalOptions="CenterAndExpand" />
+
+        <ListView ItemSelected="ListView_OnItemSelected" ItemsSource="{Binding Pedidos}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                FontSize="15"
+                                Text="{Binding Produto}" />
+
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                FontAttributes="Bold"
+                                FontSize="15"
+                                Text="{Binding Preco}" />
+
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                FontSize="12"
+                                Text="{Binding Cliente}" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button Command="{Binding AceitarPedidoCmd}" Text="Atender!" />
+    </StackLayout>
+
+</ContentPage>

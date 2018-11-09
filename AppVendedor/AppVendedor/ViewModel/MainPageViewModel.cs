@@ -50,18 +50,18 @@ namespace AppVendedor.ViewModel
             _firebaseClient
                 .Child("pedidos")
                 .AsObservable<Pedido>()
-                .Subscribe(d =>
+                .Subscribe(pedido =>
                 {
-                    if (d.EventType == FirebaseEventType.InsertOrUpdate)
+                    if (pedido.Object != null && pedido.EventType == FirebaseEventType.InsertOrUpdate)
                     {
-                        if (d.Object.IdVendedor == 0)
-                            AdicionarPedido(d.Key, d.Object);
+                        if (pedido.Object.IdVendedor == 0)
+                            AdicionarPedido(pedido.Key, pedido.Object);
                         else
-                            RemoverPedido(d.Key);
+                            RemoverPedido(pedido.Key);
                     }
-                    else if (d.EventType == FirebaseEventType.Delete)
+                    else if (pedido.EventType == FirebaseEventType.Delete)
                     {
-                        RemoverPedido(d.Key);
+                        RemoverPedido(pedido.Key);
                     }
                 });
         }

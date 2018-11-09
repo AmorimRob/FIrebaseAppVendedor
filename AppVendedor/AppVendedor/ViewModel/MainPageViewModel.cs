@@ -13,8 +13,7 @@ namespace AppVendedor.ViewModel
 {
     public class MainPageViewModel : BaseViewModel
     {
-
-        private readonly FirebaseClient _firebaseClient;
+        private readonly string ENDERECO_FIREBASE = "";
 
         private ObservableCollection<Pedido> _pedidos;
 

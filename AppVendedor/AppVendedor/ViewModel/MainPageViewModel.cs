@@ -13,7 +13,7 @@ namespace AppVendedor.ViewModel
 {
     public class MainPageViewModel : BaseViewModel
     {
-        private readonly string ENDERECO_FIREBASE = "https://demoapp-2ea27.firebaseio.com/";
+
         private readonly FirebaseClient _firebaseClient;
 
         private ObservableCollection<Pedido> _pedidos;
@@ -30,7 +30,7 @@ namespace AppVendedor.ViewModel
 
         public MainPageViewModel()
         {
-            _firebaseClient = new FirebaseClient(ENDERECO_FIREBASE);
+
             Pedidos = new ObservableCollection<Pedido>();
             AceitarPedidoCmd = new Command(() => AceitarPedido());
             ListenerPedidos();
@@ -39,31 +39,11 @@ namespace AppVendedor.ViewModel
         private void AceitarPedido()
         {
             PedidoSelecionado.IdVendedor = 1;
-            _firebaseClient
-                .Child("pedidos")
-                .Child(PedidoSelecionado.KeyPedido)
-                .PutAsync(PedidoSelecionado);
         }
 
         private void ListenerPedidos()
         {
-            _firebaseClient
-                .Child("pedidos")
-                .AsObservable<Pedido>()
-                .Subscribe(d =>
-                {
-                    if (d.EventType == FirebaseEventType.InsertOrUpdate)
-                    {
-                        if (d.Object.IdVendedor == 0)
-                            AdicionarPedido(d.Key, d.Object);
-                        else
-                            RemoverPedido(d.Key);
-                    }
-                    else if (d.EventType == FirebaseEventType.Delete)
-                    {
-                        RemoverPedido(d.Key);
-                    }
-                });
+           
         }
 
         private void AdicionarPedido(string key, Pedido pedido)

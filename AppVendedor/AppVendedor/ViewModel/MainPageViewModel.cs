@@ -13,74 +13,74 @@ namespace AppVendedor.ViewModel
 {
     public class MainPageViewModel : BaseViewModel
     {
-        private readonly string ENDERECO_FIREBASE = "https://demoapp-2ea27.firebaseio.com/";
+        private readonly string FIREBASE_API_ADDRESS = "api_address";
         private readonly FirebaseClient _firebaseClient;
 
-        private ObservableCollection<Pedido> _pedidos;
+        private ObservableCollection<Order> _oreders;
 
-        public ObservableCollection<Pedido> Pedidos
+        public ObservableCollection<Order> Orders
         {
-            get { return _pedidos; }
-            set { _pedidos = value; OnPropertyChanged(); }
+            get { return _oreders; }
+            set { _oreders = value; OnPropertyChanged(); }
         }
 
-        public Pedido PedidoSelecionado;
+        public Order SelectedOrder;
 
-        public ICommand AceitarPedidoCmd { get; set; }
+        public ICommand AcceptOrderCommand { get; set; }
 
         public MainPageViewModel()
         {
-            _firebaseClient = new FirebaseClient(ENDERECO_FIREBASE);
-            Pedidos = new ObservableCollection<Pedido>();
-            AceitarPedidoCmd = new Command(() => AceitarPedido());
+            _firebaseClient = new FirebaseClient(FIREBASE_API_ADDRESS);
+            Orders = new ObservableCollection<Order>();
+            AcceptOrderCommand = new Command(() => AcceptOrder());
             ListenerPedidos();
         }
 
-        private void AceitarPedido()
+        private void AcceptOrder()
         {
-            PedidoSelecionado.IdVendedor = 1;
+            SelectedOrder.IdSeller = 1;
             _firebaseClient
-                .Child("pedidos")
-                .Child(PedidoSelecionado.KeyPedido)
-                .PutAsync(PedidoSelecionado);
+                .Child("orders")
+                .Child(SelectedOrder.KeyOrder)
+                .PutAsync(SelectedOrder);
         }
 
         private void ListenerPedidos()
         {
             _firebaseClient
-                .Child("pedidos")
-                .AsObservable<Pedido>()
-                .Subscribe(pedido =>
+                .Child("orders")
+                .AsObservable<Order>()
+                .Subscribe(order =>
                 {
-                    if (pedido.Object != null && pedido.EventType == FirebaseEventType.InsertOrUpdate)
+                    if (order.Object != null && order.EventType == FirebaseEventType.InsertOrUpdate)
                     {
-                        if (pedido.Object.IdVendedor == 0)
-                            AdicionarPedido(pedido.Key, pedido.Object);
+                        if (order.Object.IdSeller == 0)
+                            AddOrder(order.Key, order.Object);
                         else
-                            RemoverPedido(pedido.Key);
+                            RemoveOrder(order.Key);
                     }
-                    else if (pedido.EventType == FirebaseEventType.Delete)
+                    else if (order.EventType == FirebaseEventType.Delete)
                     {
-                        RemoverPedido(pedido.Key);
+                        RemoveOrder(order.Key);
                     }
                 });
         }
 
-        private void AdicionarPedido(string key, Pedido pedido)
+        private void AddOrder(string key, Order pedido)
         {
-            Pedidos.Add(new Pedido()
+            Orders.Add(new Order()
             {
-                KeyPedido = key,
-                Cliente = pedido.Cliente,
-                Produto = pedido.Produto,
-                Preco = pedido.Preco
+                KeyOrder = key,
+                Client = pedido.Client,
+                ProductName = pedido.ProductName,
+                Price = pedido.Price
             });
         }
 
-        private void RemoverPedido(string pedidoKey)
+        private void RemoveOrder(string orderkey)
         {
-            var pedido = Pedidos.FirstOrDefault(x => x.KeyPedido == pedidoKey);
-            Pedidos.Remove(pedido);
+            var order = Orders.FirstOrDefault(x => x.KeyOrder == orderkey);
+            Orders.Remove(order);
         }
     }
 }

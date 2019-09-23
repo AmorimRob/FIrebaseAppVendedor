@@ -17,7 +17,7 @@ namespace AppVendedor
 
         private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            _viewModel.PedidoSelecionado = e.SelectedItem as Pedido;
+            _viewModel.SelectedOrder = e.SelectedItem as Order;
         }
     }
 }

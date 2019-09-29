@@ -33,7 +33,7 @@ namespace AppVendedor.ViewModel
             _firebaseClient = new FirebaseClient(FIREBASE_API_ADDRESS);
             Orders = new ObservableCollection<Order>();
             AcceptOrderCommand = new Command(() => AcceptOrder());
-            ListenerPedidos();
+            ListenerOrders();
         }
 
         private void AcceptOrder()
@@ -45,7 +45,7 @@ namespace AppVendedor.ViewModel
                 .PutAsync(SelectedOrder);
         }
 
-        private void ListenerPedidos()
+        private void ListenerOrders()
         {
             _firebaseClient
                 .Child("orders")
